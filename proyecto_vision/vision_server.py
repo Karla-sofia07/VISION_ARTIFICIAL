@@ -141,9 +141,6 @@ def guardar(usuario, nombre, preprocesamiento, ruta):
     return "%d|%s" % (id_registro, ruta_png)
 
 
-# ======================================================================
-#  ENTRADA / SALIDA DE IMÁGENES (compatible con rutas con acentos)
-# ======================================================================
 def leer(ruta):
     if not os.path.isfile(ruta):
         raise ErrorApp("No existe el archivo: " + ruta)
@@ -172,16 +169,13 @@ def cargar(ruta, salida):
     return "%dx%d" % (img.shape[1], img.shape[0])
 
 
-# ======================================================================
-#  PREPROCESAMIENTO
-# ======================================================================
 def gris_ecuacion(img):
     """Gris = 0.299 R + 0.587 G + 0.114 B  (con la ecuación, NO con cvtColor)."""
     b = img[:, :, 0].astype(np.float32)
     g = img[:, :, 1].astype(np.float32)
     r = img[:, :, 2].astype(np.float32)
     gris = np.clip(0.299 * r + 0.587 * g + 0.114 * b, 0, 255).astype(np.uint8)
-    return cv2.merge((gris, gris, gris))  # 3 canales para guardarlo igual que las demás
+    return cv2.merge((gris, gris, gris))  
 
 
 def negativo(img):
@@ -250,9 +244,6 @@ def procesar(op, param, entrada, salida):
     return "ok"
 
 
-# ======================================================================
-#  CÁMARA (vista en vivo dentro del pictureBox de Java)
-# ======================================================================
 _cap = None
 
 
@@ -285,9 +276,6 @@ def cam_off():
     return "ok"
 
 
-# ======================================================================
-#  BUCLE PRINCIPAL
-# ======================================================================
 COMANDOS = {
     "REGISTRAR": registrar,
     "LOGIN": login,
@@ -321,7 +309,7 @@ def main():
             print("OK|" + COMANDOS[cmd](*args), flush=True)
         except ErrorApp as e:
             print("ERR|" + str(e).replace("\n", " "), flush=True)
-        except Exception as e:  # cualquier otro fallo inesperado
+        except Exception as e: 
             print("ERR|Error interno: %s" % str(e).replace("\n", " "), flush=True)
 
     cam_off()
